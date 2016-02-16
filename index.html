@@ -2,9 +2,9 @@
 <html lang="en" ng-app="minmax">
     <head>
         <title>Controllers</title>
-        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+        <link href="./bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
         <link href="main.css" rel="stylesheet">
-        <script src="//code.angularjs.org/1.5.0-rc.2/angular.min.js"></script>
+        
     </head>   
     <body>
         <nav class="navbar navbar-inverse navbar-fixed-top">
@@ -16,23 +16,30 @@
         </nav>
         
         <div class="container main-content" ng-controller="MinMaxCtrl">
-            <form ng-submit="onSubmit(theForm.$valid)" novalidate="novalidate" name="theForm">
+            <form ng-submit="onSubmit()" novalidate="novalidate">
                 <div class="form-group">
-                    <label for="name">Name</label>
-                    <input type="text" ng-model="formModel.name" class="form-control" id="name">
+                    <label for="username" class="control-label">Username</label>
+                    <input type="text" 
+                           ng-model="formModel.username" 
+                           ng-pattern="/^[A-Za-z0-9_]{1,15}$/"
+                           ng-minlength="6" 
+                           ng-pattern-err-type="badUsername"
+                           class="form-control" 
+                           id="username" 
+                           required="required">
                 </div>
                 
-                <div class="form-group" ng-class="{'has-error':!theForm.email.$valid && (!theForm.$pristine || theForm.$submitted), 'has-success':theForm.email.$valid && (!theForm.$pristine || theForm.$submitted)}">
+                <div class="form-group">
                     <label for="email">Email</label>
                     <input type="email" ng-model="formModel.email" class="form-control" id="email"
                            required="required"
                            name="email">
-                    <p class="help-block" ng-show="theForm.email.$error.required && (!theForm.$pristine || theForm.$submitted)">
+<!--                    <p class="help-block" ng-show="theForm.email.$error.required && (!theForm.$pristine || theForm.$submitted)">
                         This field is required
                     </p>
                     <p class="help-block" ng-show="theForm.email.$error.email && (!theForm.$pristine || theForm.$submitted)">
                         Please enter an email with at least an @ symbol
-                    </p>
+                    </p>-->
 <!--                    <pre>Validation {{ theForm.email.$error | json }} </pre>
                     <pre>Field Valid? {{ theForm.email.$valid }}</pre>
                     <pre>Form Pristine? {{ theForm.$pristine }}</pre>
@@ -40,13 +47,21 @@
                 </div>
                 
                 <div class="form-group">
-                    <label for="age">Age</label>
-                    <input type="number" class="form-control" ng-model="formModel.age" id="age">
+                    <label for="age" class="control-label">Age</label>
+                    <input type="number" 
+                           min="18" 
+                           max="64" 
+                           class="form-control" 
+                           ng-model="formModel.age" 
+                           ng-min-err-type="tooYoung"
+                           ng-max-err-type="tooOld"
+                           id="age" 
+                           required="required">
                 </div>
                 
                 <div class="form-group">
                     <label for="sex">Sex</label>
-                    <select name="sex" id="sex" class="form-control" ng-model="formModel.sex">
+                    <select name="sex" id="sex" class="form-control" ng-model="formModel.sex" required="required">
                         <option value="">Please Choose</option>
                         <option value="male">Male</option>
                         <option value="female">Female</option>
@@ -55,7 +70,7 @@
                 
                 <div class="form-group">
                     <label for="password">Password</label>
-                    <input type="password" ng-model="formModel.password" class="form-control" id="password">
+                    <input type="password" ng-minlength="5" ng-model="formModel.password" class="form-control" id="password" required="required">
                 </div>
                 
                 <div class="form-group">
@@ -63,9 +78,10 @@
                 </div>
             </form>
             
-            <pre>{{theForm | json}}</pre>
+            <pre>{{formModel | json}}</pre>
         </div>
-        
+        <script src="./bower_components/angular/angular.min.js"></script>
+        <script src="./bower_components/angular-auto-validate/dist/jcs-auto-validate.min.js"></script>
         <script src="main.js"></script>
     </body>
 </html>
