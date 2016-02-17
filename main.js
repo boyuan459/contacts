@@ -1,4 +1,7 @@
-var app = angular.module('minmax', ['jcs-autoValidate']);
+var app = angular.module('minmax', [
+    'jcs-autoValidate',
+    'angular-ladda'
+]);
 
 app.run(function(defaultErrorMessageResolver) {
     defaultErrorMessageResolver.getErrorMessages().then(function(errorMessages) {
@@ -11,19 +14,22 @@ app.run(function(defaultErrorMessageResolver) {
 app.controller('MinMaxCtrl', function ($scope, $http) {
 
     $scope.formModel = {};
+    $scope.submitting = false;
 
     $scope.onSubmit = function () {
 
-
+        $scope.submitting = true;
         console.log("Hey I'm submitted");
         console.log($scope.formModel);
 
         $http.post('http://restcms.local/api/v1/auth/register', $scope.formModel)
                 .success(function (data) {
                     console.log(":) ", data);
+                    $scope.submitting = false;
                 }).error(function (err) {
-            console.log("Register error: " + err);
-        });
+                    console.log("Register error: " + err);
+                    $scope.submitting = false;
+                });
 
     };
 
