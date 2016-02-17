@@ -2,15 +2,16 @@ var app = angular.module('contacts', [
     
 ]);
 
-app.controller('PersonsController', function ($scope) {
+app.controller('PersonDetailController', function ($scope, ContactService) {
+    
+    $scope.contacts = ContactService;
+});
+
+app.controller('PersonListController', function ($scope, ContactService) {
 
     $scope.search = "";
-    $scope.selectedPerson = null;
     $scope.order = 'email';
-    
-    $scope.selectPerson = function(person) {
-        $scope.selectedPerson = person;
-    };
+    $scope.contacts = ContactService;
     
     $scope.sensitiveSearch = function(person) {
         if ($scope.search) {
@@ -19,8 +20,17 @@ app.controller('PersonsController', function ($scope) {
         
         return true;
     };
+   
+});
+
+app.service('ContactService', function() {
     
-    $scope.persons = [
+    return {
+        'addPerson': function(person) {
+            this.persons.push(person);
+        },
+        'selectedPerson': null,
+        'persons': [
         {
             "name": "Gregory Huffman",
             "email": "byuan@ama.com.au",
@@ -59,7 +69,7 @@ app.controller('PersonsController', function ($scope) {
         }, 
         {
             "name": "Brian Yuan",
-            "email": "Praesent@pedenec.net",
+            "email": "Praesent@pedenec.et",
             "birthdate": "2015-03-23T18:00:37-07:00",
             "phonenumber": "07624 073918",
             "address": "5880 Sed, Street",
@@ -68,7 +78,7 @@ app.controller('PersonsController', function ($scope) {
         },
         {
             "name": "Grace Huffman",
-            "email": "Praesent@pednec.net",
+            "email": "Praesent@pednec.nt",
             "birthdate": "2015-03-23T18:00:37-07:00",
             "phonenumber": "07624 073918",
             "address": "5880 Sed, Street",
@@ -102,6 +112,7 @@ app.controller('PersonsController', function ($scope) {
             "city": "Denderbelle",
             "country": "Ethiopia"
         }
-    ];
-    
+    ]
+    };
 });
+
