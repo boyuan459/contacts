@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="minmax">
+<html lang="en" ng-app="contacts">
     <head>
-        <title>Controllers</title>
+        <title>Contacts</title>
         <link href="./bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
         <link href="./bower_components/ladda/dist/ladda-themeless.min.css" rel="stylesheet">
         <link href="main.css" rel="stylesheet">
@@ -11,88 +11,104 @@
         <nav class="navbar navbar-inverse navbar-fixed-top">
             <div class="container">
                 <div class="navbar-header">
-                    <a class="navbar-brand" href="/">Controllers</a>
+                    <a class="navbar-brand" href="/">Contacts</a>
                 </div>
             </div>
         </nav>
         
-        <div class="container main-content" ng-controller="MinMaxCtrl">
-            <form ng-submit="onSubmit()" novalidate="novalidate">
-                <div class="form-group">
-                    <label for="username" class="control-label">Username</label>
-                    <input type="text" 
-                           ng-model="formModel.username" 
-                           ng-pattern="/^[A-Za-z0-9_]{1,15}$/"
-                           ng-minlength="6" 
-                           ng-pattern-err-type="badUsername"
-                           class="form-control" 
-                           id="username" 
-                           required="required">
-                </div>
-                
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" ng-model="formModel.email" class="form-control" id="email"
-                           required="required"
-                           name="email">
-<!--                    <p class="help-block" ng-show="theForm.email.$error.required && (!theForm.$pristine || theForm.$submitted)">
-                        This field is required
-                    </p>
-                    <p class="help-block" ng-show="theForm.email.$error.email && (!theForm.$pristine || theForm.$submitted)">
-                        Please enter an email with at least an @ symbol
-                    </p>-->
-<!--                    <pre>Validation {{ theForm.email.$error | json }} </pre>
-                    <pre>Field Valid? {{ theForm.email.$valid }}</pre>
-                    <pre>Form Pristine? {{ theForm.$pristine }}</pre>
-                    <pre>Form Submitted? {{ theForm.$submitted }}</pre>-->
-                </div>
-                
-                <div class="form-group">
-                    <label for="age" class="control-label">Age</label>
-                    <input type="number" 
-                           min="18" 
-                           max="64" 
-                           class="form-control" 
-                           ng-model="formModel.age" 
-                           ng-min-err-type="tooYoung"
-                           ng-max-err-type="tooOld"
-                           id="age" 
-                           required="required">
-                </div>
-                
-                <div class="form-group">
-                    <label for="sex">Sex</label>
-                    <select name="sex" id="sex" class="form-control" ng-model="formModel.sex" required="required">
-                        <option value="">Please Choose</option>
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" ng-minlength="5" ng-model="formModel.password" class="form-control" id="password" required="required">
-                </div>
-                
-                <div class="form-group">
-                    <button 
-                        class="btn btn-primary" 
-                        ladda="submitting"
-                        data-style="expand-right"
-                        type="submit">
-                        <span ng-show="submitting">Registering</span>
-                        <span ng-show="!submitting">Register</span>
-                    </button>
-                </div>
-            </form>
+        <div class="container main-content" ng-controller="PersonsController">
             
+            <div class="row">
+                <div class="col-md-12">
+                    <form class="form-inline well well-sm">
+                        <span class="glyphicon glyphicon-search"></span>
+                        <div class="form-group">
+                            <input type="text" 
+                                   class="form-control" 
+                                   id="name" 
+                                   ng-model="search"
+                                   placeholder="Search name..."/>
+                        </div>
+                        
+                        
+                        
+                        <div class="form-group">
+                            <select class="form-control" ng-model="order">
+                                <option value="name">Name (ASC)</option>
+                                <option value="-name">Name (DEC)</option>
+                                <option value="email">Email (ASC)</option>
+                                <option value="-email">Email (DEC)</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-8">
+                    <table class="table table-bordered">
+                        <tr>
+                            <th>#</th>
+                            <th>Name
+                                <span ng-click="order = 'name'" class="glyphicon glyphicon-menu-up"></span>
+                                <span ng-click="order = '-name'" class="glyphicon glyphicon-menu-down"></span>
+                            </th>
+                            <th>Email
+                                <span ng-click="order = 'email'" class="glyphicon glyphicon-menu-up"></span>
+                                <span ng-click="order = '-email'" class="glyphicon glyphicon-menu-down"></span>
+                            </th>
+                            <th>Birthday</th>
+                        </tr>
+
+                        <tr ng-repeat="person in filteredPerson = (persons | filter:sensitiveSearch | orderBy:order)" ng-style="{
+                            'background-color': person.email == selectedPerson.email ? 'lightgray' : ''
+                        }"
+                        ng-click="selectPerson(person)">
+                            <td>{{ $index }}</td>
+                            <td>{{ person.name }}</td>
+                            <td>{{ person.email }}</td>
+                            <td>{{ person.birthdate | date: "longDate"}}</td>
+                        </tr>
+                        
+                        <tr ng-show="filteredPerson.length == 0">
+                            <td colspan="4">
+                                <div class="alert alert-info">
+                                    <p class="text-center">
+                                        No results found for search term '{{search}}'
+                                    </p>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="col-md-4">
+                    
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Details</div>
+                        <div class="panel-body">
+                            <dl>
+                                <dt>Name</dt>
+                                <dd>{{selectedPerson.name}}</dd>
+                                <dt>Email</dt>
+                                <dd>{{selectedPerson.email}}</dd>
+                                <dt>Birthday</dt>
+                                <dd>{{selectedPerson.birthdate | date:"longDate"}}</dd>
+                                <dt>Phonenumber</dt>
+                                <dd>{{selectedPerson.phonenumber}}</dd>
+                                <dt>Address</dt>
+                                <dd>{{selectedPerson.address}}</dd>
+                                <dt>City</dt>
+                                <dd>{{selectedPerson.city}}</dd>
+                                <dt>Country</dt>
+                                <dd>{{selectedPerson.country}}</dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
             
         </div>
         <script src="./bower_components/angular/angular.min.js"></script>
-        <script src="./bower_components/angular-auto-validate/dist/jcs-auto-validate.min.js"></script>
-        <script src="./bower_components/ladda/dist/spin.min.js"></script>
-        <script src="./bower_components/ladda/dist/ladda.min.js"></script>
-        <script src="./bower_components/angular-ladda/dist/angular-ladda.min.js"></script>
         <script src="main.js"></script>
     </body>
 </html>

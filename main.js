@@ -1,36 +1,107 @@
-var app = angular.module('minmax', [
-    'jcs-autoValidate',
-    'angular-ladda'
+var app = angular.module('contacts', [
+    
 ]);
 
-app.run(function(defaultErrorMessageResolver) {
-    defaultErrorMessageResolver.getErrorMessages().then(function(errorMessages) {
-        errorMessages['tooYoung'] = 'You must be at least {0} years old to use this site';
-        errorMessages['tooOld'] = 'You must be max {0} years old to use this site';
-        errorMessages['badUsername'] = 'Username can only contain numbers and letters and _';
-    });
-});
+app.controller('PersonsController', function ($scope) {
 
-app.controller('MinMaxCtrl', function ($scope, $http) {
-
-    $scope.formModel = {};
-    $scope.submitting = false;
-
-    $scope.onSubmit = function () {
-
-        $scope.submitting = true;
-        console.log("Hey I'm submitted");
-        console.log($scope.formModel);
-
-        $http.post('http://restcms.local/api/v1/auth/register', $scope.formModel)
-                .success(function (data) {
-                    console.log(":) ", data);
-                    $scope.submitting = false;
-                }).error(function (err) {
-                    console.log("Register error: " + err);
-                    $scope.submitting = false;
-                });
-
+    $scope.search = "";
+    $scope.selectedPerson = null;
+    $scope.order = 'email';
+    
+    $scope.selectPerson = function(person) {
+        $scope.selectedPerson = person;
     };
-
+    
+    $scope.sensitiveSearch = function(person) {
+        if ($scope.search) {
+            return person.name.indexOf($scope.search) == 0 || person.email.indexOf($scope.search) == 0;
+        }
+        
+        return true;
+    };
+    
+    $scope.persons = [
+        {
+            "name": "Gregory Huffman",
+            "email": "byuan@ama.com.au",
+            "birthdate": "2015-03-23T18:00:37-07:00",
+            "phonenumber": "07624 073918",
+            "address": "5880 Sed, Street",
+            "city": "Denderbelle",
+            "country": "Ethiopia"
+        }, 
+        {
+            "name": "Brian Yuan",
+            "email": "Paesent@pedenec.net",
+            "birthdate": "2015-03-23T18:00:37-07:00",
+            "phonenumber": "07624 073918",
+            "address": "5880 Sed, Street",
+            "city": "Denderbelle",
+            "country": "Ethiopia"
+        },
+        {
+            "name": "Grace Huffman",
+            "email": "Praesent@pedenec.net",
+            "birthdate": "2015-03-23T18:00:37-07:00",
+            "phonenumber": "07624 073918",
+            "address": "5880 Sed, Street",
+            "city": "Denderbelle",
+            "country": "Ethiopia"
+        },
+        {
+            "name": "Gregory Huffman",
+            "email": "Prasent@pedenec.net",
+            "birthdate": "2015-03-23T18:00:37-07:00",
+            "phonenumber": "07624 073918",
+            "address": "5880 Sed, Street",
+            "city": "Denderbelle",
+            "country": "Ethiopia"
+        }, 
+        {
+            "name": "Brian Yuan",
+            "email": "Praesent@pedenec.net",
+            "birthdate": "2015-03-23T18:00:37-07:00",
+            "phonenumber": "07624 073918",
+            "address": "5880 Sed, Street",
+            "city": "Denderbelle",
+            "country": "Ethiopia"
+        },
+        {
+            "name": "Grace Huffman",
+            "email": "Praesent@pednec.net",
+            "birthdate": "2015-03-23T18:00:37-07:00",
+            "phonenumber": "07624 073918",
+            "address": "5880 Sed, Street",
+            "city": "Denderbelle",
+            "country": "Ethiopia"
+        },
+        {
+            "name": "Gregory Huffman",
+            "email": "Praesent@pednec.net",
+            "birthdate": "2015-03-23T18:00:37-07:00",
+            "phonenumber": "07624 073918",
+            "address": "5880 Sed, Street",
+            "city": "Denderbelle",
+            "country": "Ethiopia"
+        }, 
+        {
+            "name": "Brian Yuan",
+            "email": "Praesent@pedenec.ne",
+            "birthdate": "2015-03-23T18:00:37-07:00",
+            "phonenumber": "07624 073918",
+            "address": "5880 Sed, Street",
+            "city": "Denderbelle",
+            "country": "Ethiopia"
+        },
+        {
+            "name": "Grace Huffman",
+            "email": "Praesen@pedenec.net",
+            "birthdate": "2015-03-23T18:00:37-07:00",
+            "phonenumber": "07624 073918",
+            "address": "5880 Sed, Street",
+            "city": "Denderbelle",
+            "country": "Ethiopia"
+        }
+    ];
+    
 });
