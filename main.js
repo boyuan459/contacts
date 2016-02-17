@@ -1,6 +1,16 @@
 var app = angular.module('contacts', [
-    
+    'ngResource'
 ]);
+
+app.config(function($httpProvider, $resourceProvider) {
+    
+    $httpProvider.defaults.headers.common['Authorization'] = 'Token 5e299ae71fd699dce72de8459ea5415427170b31';
+    $resourceProvider.defaults.stripTrailingSlashes = false;
+});
+
+app.factory("Contact", function($resource) {
+    return $resource("https://codecraftpro.com/api/samples/v1/contact/:id/");
+});
 
 app.controller('PersonDetailController', function ($scope, ContactService) {
     
@@ -23,96 +33,18 @@ app.controller('PersonListController', function ($scope, ContactService) {
    
 });
 
-app.service('ContactService', function() {
+app.service('ContactService', function(Contact) {
+    
+    Contact.get(function(data) {
+        console.log(data);
+    });
     
     return {
         'addPerson': function(person) {
             this.persons.push(person);
         },
         'selectedPerson': null,
-        'persons': [
-        {
-            "name": "Gregory Huffman",
-            "email": "byuan@ama.com.au",
-            "birthdate": "2015-03-23T18:00:37-07:00",
-            "phonenumber": "07624 073918",
-            "address": "5880 Sed, Street",
-            "city": "Denderbelle",
-            "country": "Ethiopia"
-        }, 
-        {
-            "name": "Brian Yuan",
-            "email": "Paesent@pedenec.net",
-            "birthdate": "2015-03-23T18:00:37-07:00",
-            "phonenumber": "07624 073918",
-            "address": "5880 Sed, Street",
-            "city": "Denderbelle",
-            "country": "Ethiopia"
-        },
-        {
-            "name": "Grace Huffman",
-            "email": "Praesent@pedenec.net",
-            "birthdate": "2015-03-23T18:00:37-07:00",
-            "phonenumber": "07624 073918",
-            "address": "5880 Sed, Street",
-            "city": "Denderbelle",
-            "country": "Ethiopia"
-        },
-        {
-            "name": "Gregory Huffman",
-            "email": "Prasent@pedenec.net",
-            "birthdate": "2015-03-23T18:00:37-07:00",
-            "phonenumber": "07624 073918",
-            "address": "5880 Sed, Street",
-            "city": "Denderbelle",
-            "country": "Ethiopia"
-        }, 
-        {
-            "name": "Brian Yuan",
-            "email": "Praesent@pedenec.et",
-            "birthdate": "2015-03-23T18:00:37-07:00",
-            "phonenumber": "07624 073918",
-            "address": "5880 Sed, Street",
-            "city": "Denderbelle",
-            "country": "Ethiopia"
-        },
-        {
-            "name": "Grace Huffman",
-            "email": "Praesent@pednec.nt",
-            "birthdate": "2015-03-23T18:00:37-07:00",
-            "phonenumber": "07624 073918",
-            "address": "5880 Sed, Street",
-            "city": "Denderbelle",
-            "country": "Ethiopia"
-        },
-        {
-            "name": "Gregory Huffman",
-            "email": "Praesent@pednec.net",
-            "birthdate": "2015-03-23T18:00:37-07:00",
-            "phonenumber": "07624 073918",
-            "address": "5880 Sed, Street",
-            "city": "Denderbelle",
-            "country": "Ethiopia"
-        }, 
-        {
-            "name": "Brian Yuan",
-            "email": "Praesent@pedenec.ne",
-            "birthdate": "2015-03-23T18:00:37-07:00",
-            "phonenumber": "07624 073918",
-            "address": "5880 Sed, Street",
-            "city": "Denderbelle",
-            "country": "Ethiopia"
-        },
-        {
-            "name": "Grace Huffman",
-            "email": "Praesen@pedenec.net",
-            "birthdate": "2015-03-23T18:00:37-07:00",
-            "phonenumber": "07624 073918",
-            "address": "5880 Sed, Street",
-            "city": "Denderbelle",
-            "country": "Ethiopia"
-        }
-    ]
+        'persons': []
     };
 });
 
