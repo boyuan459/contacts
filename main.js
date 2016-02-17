@@ -1,6 +1,7 @@
 var app = angular.module('contacts', [
     'ngResource',
-    'infinite-scroll'
+    'infinite-scroll',
+    'angularSpinner'
 ]);
 
 app.config(function($httpProvider, $resourceProvider) {
@@ -25,15 +26,18 @@ app.controller('PersonListController', function ($scope, ContactService) {
     $scope.search = "";
     $scope.order = 'email';
     $scope.contacts = ContactService;
-    
-    $scope.sensitiveSearch = function(person) {
-        if ($scope.search) {
-            return person.name.indexOf($scope.search) == 0 || person.email.indexOf($scope.search) == 0;
-        }
-        
-        return true;
-    };
    
+    $scope.$watch('search', function(newVal, oldVal) {
+        if (angular.isDefined(newVal)) {
+            $scope.contacts.doSearch(newVal);
+        }
+    });
+    
+    $scope.$watch('order', function(newVal, oldVal) {
+        if (angular.isDefined(newVal)) {
+            $scope.contacts.doOrder(newVal);
+        }
+    });
 });
 
 app.service('ContactService', function(Contact) {
@@ -47,12 +51,29 @@ app.service('ContactService', function(Contact) {
         'isLoading': false,
         'selectedPerson': null,
         'persons': [],
+        'search': null,
+        'doSearch': function(search) {
+            self.hasMore = true;
+            self.page = 1;
+            self.persons = [];
+            self.search = search;
+            self.loadContacts();
+        },
+        'doOrder': function(order) {
+            self.hasMore = true;
+            self.page = 1;
+            self.persons = [];
+            self.ordering = order;
+            self.loadContacts();
+        },
         'loadContacts': function() {
             if (self.hasMore && !self.isLoading) {
                 self.isLoading = true;
                 
                 var params = {
-                    'page': self.page
+                    'page': self.page,
+                    'search': self.search,
+                    'ordering': self.ordering
                 };
                 
                 Contact.get(params, function(result) {
