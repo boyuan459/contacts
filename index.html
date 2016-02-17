@@ -46,7 +46,10 @@
                         </div>
                     </div>
                     
-                    <table class="table table-bordered">
+                    <table class="table table-bordered" 
+                           infinite-scroll="contacts.loadMore()" 
+                           infinite-scroll-disabled="contacts.isLoading"
+                           infinite-scroll-distance="1">
                         <tr>
                             <th>#</th>
                             <th>Name
@@ -60,7 +63,7 @@
                             <th>Birthday</th>
                         </tr>
 
-                        <tr ng-repeat="person in filteredPerson = (contacts.persons | filter:sensitiveSearch | orderBy:order)" ng-style="{
+                        <tr ng-repeat="person in contacts.persons" ng-style="{
                             'background-color': person.email == contacts.selectedPerson.email ? 'lightgray' : ''
                         }"
                         ng-click="contacts.selectedPerson = person">
@@ -69,12 +72,12 @@
                             <td>{{ person.email }}</td>
                             <td>{{ person.birthdate | date: "longDate"}}</td>
                         </tr>
-                        
-                        <tr ng-show="filteredPerson.length == 0">
+                       
+                        <tr ng-show="contacts.isLoading">
                             <td colspan="4">
                                 <div class="alert alert-info">
                                     <p class="text-center">
-                                        No results found for search term '{{search}}'
+                                        Loading data...
                                     </p>
                                 </div>
                             </td>
@@ -110,6 +113,7 @@
         </div>
         <script src="./bower_components/angular/angular.min.js"></script>
         <script src="./bower_components/angular-resource/angular-resource.min.js"></script>
+        <script src="./bower_components/ngInfiniteScroll/build/ng-infinite-scroll.min.js"></script>
         <script src="main.js"></script>
     </body>
 </html>

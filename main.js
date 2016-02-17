@@ -1,15 +1,18 @@
 var app = angular.module('contacts', [
-    'ngResource'
+    'ngResource',
+    'infinite-scroll'
 ]);
 
 app.config(function($httpProvider, $resourceProvider) {
     
-    $httpProvider.defaults.headers.common['Authorization'] = 'Token 5e299ae71fd699dce72de8459ea5415427170b31';
-    $resourceProvider.defaults.stripTrailingSlashes = false;
+//    $httpProvider.defaults.headers.common['Authorization'] = 'Token 5e299ae71fd699dce72de8459ea5415427170b31';
+    $httpProvider.defaults.headers.common['Authorization'] = 'Bearer sKsyA3q54CEprhp78RRiF4F8e36HvzMzumO1ctJK';
+//    $resourceProvider.defaults.stripTrailingSlashes = false;
 });
 
 app.factory("Contact", function($resource) {
-    return $resource("https://codecraftpro.com/api/samples/v1/contact/:id/");
+//    return $resource("https://codecraftpro.com/api/samples/v1/contact/:id/");
+    return $resource('http://restcms.local/api/v1/contacts');
 });
 
 app.controller('PersonDetailController', function ($scope, ContactService) {
@@ -35,16 +38,47 @@ app.controller('PersonListController', function ($scope, ContactService) {
 
 app.service('ContactService', function(Contact) {
     
-    Contact.get(function(data) {
-        console.log(data);
-    });
-    
-    return {
+    var self = {
         'addPerson': function(person) {
             this.persons.push(person);
         },
+        'page': 1,
+        'hasMore': true,
+        'isLoading': false,
         'selectedPerson': null,
-        'persons': []
+        'persons': [],
+        'loadContacts': function() {
+            if (self.hasMore && !self.isLoading) {
+                self.isLoading = true;
+                
+                var params = {
+                    'page': self.page
+                };
+                
+                Contact.get(params, function(result) {
+                    console.log(result);
+                    angular.forEach(result.data, function(person) {
+                        self.persons.push(new Contact(person));
+                    });
+                    if (result.current_page >= result.last_page) {
+                        self.hasMore = false;
+                    }
+                    
+                    self.isLoading = false;
+                });
+            }
+        },
+        'loadMore': function() {
+            if (self.isLoading) return;
+            if (self.hasMore && !self.isLoading) {
+                self.page += 1;
+                self.loadContacts();
+            }
+        }
     };
+    
+    self.loadContacts();
+    
+    return self;
 });
 
