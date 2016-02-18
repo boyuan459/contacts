@@ -1,24 +1,38 @@
 var app = angular.module('contacts', [
     'ngResource',
     'infinite-scroll',
-    'angularSpinner'
+    'angularSpinner',
+    'jcs-autoValidate',
+    'angular-ladda'
 ]);
 
-app.config(function($httpProvider, $resourceProvider) {
+app.config(function($httpProvider, $resourceProvider, laddaProvider) {
     
 //    $httpProvider.defaults.headers.common['Authorization'] = 'Token 5e299ae71fd699dce72de8459ea5415427170b31';
-    $httpProvider.defaults.headers.common['Authorization'] = 'Bearer sKsyA3q54CEprhp78RRiF4F8e36HvzMzumO1ctJK';
+    $httpProvider.defaults.headers.common['Authorization'] = 'Bearer dVpRd2mVl8NKpZ2zCANezG3ViCLyvN5gn6yR2uFU';
 //    $resourceProvider.defaults.stripTrailingSlashes = false;
+    laddaProvider.setOption({
+        style: 'expand-right'
+    });
 });
 
 app.factory("Contact", function($resource) {
 //    return $resource("https://codecraftpro.com/api/samples/v1/contact/:id/");
-    return $resource('http://restcms.local/api/v1/contacts');
+    return $resource('http://restcms.local/api/v1/contact/:id/', {id:'@id'}, {
+        update: {
+            method: 'PUT'
+        }
+    });
 });
 
 app.controller('PersonDetailController', function ($scope, ContactService) {
     
     $scope.contacts = ContactService;
+    
+    $scope.save = function() {
+        $scope.contacts.updateContact($scope.contacts.selectedPerson);
+    };
+    
 });
 
 app.controller('PersonListController', function ($scope, ContactService) {
@@ -95,6 +109,10 @@ app.service('ContactService', function(Contact) {
                 self.page += 1;
                 self.loadContacts();
             }
+        },
+        'updateContact': function(person) {
+            console.log("Service Contact update");
+            Contact.update(person);
         }
     };
     
