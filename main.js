@@ -3,7 +3,8 @@ var app = angular.module('contacts', [
     'infinite-scroll',
     'angularSpinner',
     'jcs-autoValidate',
-    'angular-ladda'
+    'angular-ladda',
+    'mgcrea.ngStrap'
 ]);
 
 app.config(function($httpProvider, $resourceProvider, laddaProvider) {
@@ -38,7 +39,7 @@ app.controller('PersonDetailController', function ($scope, ContactService) {
     };
 });
 
-app.controller('PersonListController', function ($scope, ContactService) {
+app.controller('PersonListController', function ($scope, $modal, ContactService) {
 
     $scope.search = "";
     $scope.order = 'email';
@@ -55,6 +56,20 @@ app.controller('PersonListController', function ($scope, ContactService) {
             $scope.contacts.doOrder(newVal);
         }
     });
+    
+    $scope.showCreateModal = function() {
+        console.log("show modal");
+        $scope.createModal = $modal({
+            scope: $scope,
+            templateUrl: 'templates/modal.create.tpl.html',
+            show: true
+        });
+        
+    };
+    
+    $scope.createContact = function() {
+        console.log("Create contact");
+    };
 });
 
 app.service('ContactService', function(Contact) {
