@@ -9,7 +9,7 @@ var app = angular.module('contacts', [
 app.config(function($httpProvider, $resourceProvider, laddaProvider) {
     
 //    $httpProvider.defaults.headers.common['Authorization'] = 'Token 5e299ae71fd699dce72de8459ea5415427170b31';
-    $httpProvider.defaults.headers.common['Authorization'] = 'Bearer dVpRd2mVl8NKpZ2zCANezG3ViCLyvN5gn6yR2uFU';
+    $httpProvider.defaults.headers.common['Authorization'] = 'Bearer sKsyA3q54CEprhp78RRiF4F8e36HvzMzumO1ctJK';
 //    $resourceProvider.defaults.stripTrailingSlashes = false;
     laddaProvider.setOption({
         style: 'expand-right'
@@ -63,6 +63,7 @@ app.service('ContactService', function(Contact) {
         'page': 1,
         'hasMore': true,
         'isLoading': false,
+        'isSaving': false,
         'selectedPerson': null,
         'persons': [],
         'search': null,
@@ -111,8 +112,11 @@ app.service('ContactService', function(Contact) {
             }
         },
         'updateContact': function(person) {
-            console.log("Service Contact update");
-            Contact.update(person);
+            self.isSaving = true;
+//            Contact.update(person).$promise.then(function() {
+            person.$update().then(function() {
+                self.isSaving = false;
+            });
         }
     };
     
