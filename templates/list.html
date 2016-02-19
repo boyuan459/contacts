@@ -14,15 +14,15 @@
             <th>#</th>
             <th>
         <div class="sortables">
-            <span ng-click="order = 'name'" class="fa fa-sort-asc"></span>
-            <span ng-click="order = '-name'" class="fa fa-sort-desc"></span>
+            <span ng-click="contacts.ordering = 'name'" class="fa fa-sort-asc"></span>
+            <span ng-click="contacts.ordering = '-name'" class="fa fa-sort-desc"></span>
         </div>
         Name
         </th>
         <th>
         <div class="sortables">
-            <span ng-click="order = 'email'" class="fa fa-sort-asc"></span>
-            <span ng-click="order = '-email'" class="fa fa-sort-desc"></span>
+            <span ng-click="contacts.ordering = 'email'" class="fa fa-sort-asc"></span>
+            <span ng-click="contacts.ordering = '-email'" class="fa fa-sort-desc"></span>
         </div>
         Email
         </th>
@@ -55,7 +55,8 @@
 
     </div>
 
-    <div class="spinner" ng-show="contacts.isLoading">
-        <span us-spinner="{radius:8, width:5, length: 3, lines: 9}"></span>
-    </div>
+    <by-spinner is-loading="contacts.isLoading" message="Mooing...{{search}}"></by-spinner>
+    <!--<div by-spinner></div>-->
+    <!--<div class="by-spinner"></div>-->
+    <!--<ng-include src="'templates/spinner.html'"></ng-include>-->
 </div>

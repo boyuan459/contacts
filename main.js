@@ -76,6 +76,19 @@ app.factory("Contact", function($resource) {
     });
 });
 
+app.directive('bySpinner', function() {
+    
+    return {
+        'transclude': true,
+        'restrict': 'AEC',
+        'templateUrl': 'templates/spinner.html',
+        'scope': {
+            'isLoading':'=',
+            'message':'@'
+        }
+    };
+});
+
 app.filter('defaultImage', function() {
     
     return function(input, param) {
