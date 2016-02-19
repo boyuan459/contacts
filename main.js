@@ -10,7 +10,8 @@ var app = angular.module('contacts', [
 app.config(function($httpProvider, $resourceProvider, laddaProvider) {
     
 //    $httpProvider.defaults.headers.common['Authorization'] = 'Token 5e299ae71fd699dce72de8459ea5415427170b31';
-    $httpProvider.defaults.headers.common['Authorization'] = 'Bearer sKsyA3q54CEprhp78RRiF4F8e36HvzMzumO1ctJK';
+//    $httpProvider.defaults.headers.common['Authorization'] = 'Bearer sKsyA3q54CEprhp78RRiF4F8e36HvzMzumO1ctJK';
+    $httpProvider.defaults.headers.common['Authorization'] = 'Bearer OaDDFB1RVrznu50EM35HaG4llQrHmRRi2UxVy8pU';
 //    $resourceProvider.defaults.stripTrailingSlashes = false;
     laddaProvider.setOption({
         style: 'expand-right'
@@ -58,7 +59,7 @@ app.controller('PersonListController', function ($scope, $modal, ContactService)
     });
     
     $scope.showCreateModal = function() {
-        console.log("show modal");
+        $scope.contacts.selectedPerson = {};
         $scope.createModal = $modal({
             scope: $scope,
             templateUrl: 'templates/modal.create.tpl.html',
@@ -69,10 +70,15 @@ app.controller('PersonListController', function ($scope, $modal, ContactService)
     
     $scope.createContact = function() {
         console.log("Create contact");
+        var $promise = $scope.contacts.createContact($scope.contacts.selectedPerson);
+        $promise.then(function(data) {
+//            console.log(data);
+            $scope.createModal.hide();
+        });
     };
 });
 
-app.service('ContactService', function(Contact) {
+app.service('ContactService', function(Contact, $q) {
     
     var self = {
         'addPerson': function(person) {
@@ -145,6 +151,21 @@ app.service('ContactService', function(Contact) {
                 self.persons.splice(index, 1);
                 self.selectedPerson = null;
             });
+        },
+        'createContact': function(person) {
+            var d = $q.defer();
+            self.isSaving = true;
+            Contact.save(person).$promise.then(function(data) {
+                self.isSaving = false;
+                self.selectedPerson = null;
+                self.hasMore = true;
+                self.page = 1;
+                self.persons = [];
+                self.loadContacts();
+                d.resolve(data);
+            });
+            
+            return d.promise;
         }
     };
     
