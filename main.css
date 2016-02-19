@@ -23,3 +23,8 @@ span {
 span.ng-scope {
     display: none;
 }
+
+.profile-photo {
+    width: 30px;
+    height: 30px;
+}
