@@ -7,7 +7,7 @@ var app = angular.module('contacts', [
     'mgcrea.ngStrap'
 ]);
 
-app.config(function($httpProvider, $resourceProvider, laddaProvider) {
+app.config(function($httpProvider, $resourceProvider, laddaProvider, $datepickerProvider) {
     
 //    $httpProvider.defaults.headers.common['Authorization'] = 'Token 5e299ae71fd699dce72de8459ea5415427170b31';
 //    $httpProvider.defaults.headers.common['Authorization'] = 'Bearer sKsyA3q54CEprhp78RRiF4F8e36HvzMzumO1ctJK';
@@ -15,6 +15,11 @@ app.config(function($httpProvider, $resourceProvider, laddaProvider) {
 //    $resourceProvider.defaults.stripTrailingSlashes = false;
     laddaProvider.setOption({
         style: 'expand-right'
+    });
+    
+    angular.extend($datepickerProvider.defaults, {
+        dateFormat: 'dd/MM/yyyy',
+        startWeek: 1
     });
 });
 
