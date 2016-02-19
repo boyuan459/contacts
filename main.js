@@ -79,12 +79,32 @@ app.factory("Contact", function($resource) {
 app.directive('bySpinner', function() {
     
     return {
-        'transclude': true,
-        'restrict': 'AEC',
+        'restrict': 'AE',
         'templateUrl': 'templates/spinner.html',
         'scope': {
             'isLoading':'=',
             'message':'@'
+        }
+    };
+});
+
+app.directive('byCard', function() {
+    
+    return {
+        'restrict': 'AE',
+        'templateUrl': 'templates/card.html',
+        'scope': {
+            'user':'='
+        },
+        'controller': function($scope, ContactService) {
+            $scope.isDeleting = false;
+            $scope.deleteUser = function() {
+                $scope.isDeleting = true;
+                ContactService.removeContact($scope.user).then(function() {
+                    $scope.isDeleting = false;
+                    
+                });
+            };
         }
     };
 });
@@ -140,6 +160,10 @@ app.controller('PersonListController', function ($scope, $modal, ContactService)
     $scope.search = "";
     $scope.order = 'email';
     $scope.contacts = ContactService;
+   
+    $scope.parentDeleteUser = function(user) {
+        $scope.contacts.removeContact(user);
+    };
    
     $scope.showCreateModal = function() {
         $scope.contacts.selectedPerson = {};
