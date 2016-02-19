@@ -22,6 +22,11 @@ app.config(function($stateProvider, $urlRouterProvider) {
                 url: "/edit/:email",
                 templateUrl: 'templates/edit.html',
                 controller: 'PersonDetailController'
+            })
+            .state('create', {
+                url: "/create",
+                templateUrl: 'templates/edit.html',
+                controller: 'PersonCreateController'
             });
            
     $urlRouterProvider.otherwise('/');
@@ -63,8 +68,24 @@ app.filter('defaultImage', function() {
     };
 });
 
+app.controller('PersonCreateController', function($scope, $state, ContactService) {
+    
+    $scope.mode = "Create";
+    $scope.contacts = ContactService;
+    
+    $scope.save = function() {
+        console.log("Create contact");
+        var $promise = $scope.contacts.createContact($scope.contacts.selectedPerson);
+        $promise.then(function(data) {
+//            console.log(data);
+            $state.go("list");
+        });
+    };
+});
+
 app.controller('PersonDetailController', function ($scope, $stateParams, $state, ContactService) {
     
+    $scope.mode = "Edit";
     $scope.contacts = ContactService;
     
     $scope.contacts.selectedPerson = $scope.contacts.getPerson($stateParams.email);

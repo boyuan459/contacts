@@ -9,7 +9,16 @@
             <form ng-submit="createContact()"
                 class="form-horizontal"
                 novalidate>
+                
               <ng-include src="'templates/form.html'"></ng-include>
+              
+              <div class="buttons">
+                <button class="btn btn-primary btn-block"
+                        ladda="contacts.isSaving"
+                        type="submit">
+                    Save
+                </button>
+            </div>
           </form>
         </div>
       
