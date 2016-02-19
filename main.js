@@ -6,8 +6,26 @@ var app = angular.module('contacts', [
     'angular-ladda',
     'mgcrea.ngStrap',
     'toaster', 
-    'ngAnimate'
+    'ngAnimate',
+    'ui.router'
 ]);
+
+app.config(function($stateProvider, $urlRouterProvider) {
+    
+    $stateProvider
+            .state('list', {
+                url: "/",
+                templateUrl: 'templates/list.html',
+                controller: 'PersonListController'
+            })
+            .state('edit', {
+                url: "/edit/:email",
+                templateUrl: 'templates/edit.html',
+                controller: 'PersonDetailController'
+            });
+           
+    $urlRouterProvider.otherwise('/');
+});
 
 app.config(function($httpProvider, $resourceProvider, laddaProvider, $datepickerProvider) {
     
@@ -45,9 +63,11 @@ app.filter('defaultImage', function() {
     };
 });
 
-app.controller('PersonDetailController', function ($scope, ContactService) {
+app.controller('PersonDetailController', function ($scope, $stateParams, ContactService) {
     
     $scope.contacts = ContactService;
+    
+    $scope.contacts.selectedPerson = $scope.contacts.getPerson($stateParams.email);
     
     $scope.save = function() {
         $scope.contacts.updateContact($scope.contacts.selectedPerson);
@@ -99,6 +119,15 @@ app.controller('PersonListController', function ($scope, $modal, ContactService)
 app.service('ContactService', function(Contact, $q, toaster) {
     
     var self = {
+        'getPerson': function(email) {
+            console.log(email);
+            for (var i=0;i<self.persons.length;i++) {
+                var obj = self.persons[i];
+                if (obj.email == email) {
+                    return obj;
+                }
+            }
+        },
         'addPerson': function(person) {
             this.persons.push(person);
         },
