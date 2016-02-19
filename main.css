@@ -11,9 +11,10 @@ body {
     height: 50px;
     margin: 0 auto;
     padding: 40px 0;
-    p {
+}
+
+.spinner p {
         margin-top: 20px; 
-    }
 }
 
 span {
@@ -69,4 +70,3 @@ span.ng-scope {
 .sortables span:hover {
         color: #002a80;
     }
-}
